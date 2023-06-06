@@ -8,13 +8,12 @@ setup_rust() {
 }
 
 setup_c() {
-    nvim --headless +'TSInstall c cpp' +'MasonInstall clangd' +'sleep 50' +qall
+    nvim --headless +'TSInstall c cpp' +'MasonInstall clangd' +'sleep 40' +qall
 }
 
 apt-get update && apt-get install -y \
     curl \
     git \
-    python3-pip \
     g++ \
     unzip \
     && rm -rf /var/lib/apt/lists/*
@@ -52,7 +51,7 @@ do
     case "$1" in
         rust) setup_rust
             ;;
-        rust) setup_c
+        c) setup_c
             ;;
     esac
     shift
