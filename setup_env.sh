@@ -11,6 +11,11 @@ setup_c() {
     nvim --headless +'TSInstall c cpp' +'MasonInstall clangd' +'sleep 40' +qall
 }
 
+setup_python() {
+    apt-get install -y python3 python3-pip
+    nvim --headless +'TSInstall python' +'MasonInstall pyright' +'sleep 20' +qall
+}
+
 apt-get update && apt-get install -y \
     curl \
     git \
@@ -52,6 +57,8 @@ do
         rust) setup_rust
             ;;
         c) setup_c
+            ;;
+        python) setup_python
             ;;
     esac
     shift
