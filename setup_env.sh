@@ -13,15 +13,15 @@ setup_c() {
 
 setup_python() {
     apt-get install -y python3 python3-pip
-    nvim --headless +'TSInstall python' +'MasonInstall pyright' +'sleep 20' +qall
+    pip install pyright
+    nvim --headless +'TSInstall python' +'sleep 20' +qall
 }
 
 apt-get update && apt-get install -y \
     curl \
     git \
     g++ \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
+    unzip
  
 # Bash
 echo "set -o vi" >> ~/.bashrc
