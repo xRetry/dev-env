@@ -26,17 +26,12 @@ apt-get update && apt-get install -y \
 # Bash
 echo "set -o vi" >> ~/.bashrc
 echo "export TERM=screen-256color-bce" >> ~/.bashrc
-echo "alias ze='zellij'" >> ~/.bashrc
 
-# Zellij
-curl -LO https://github.com/zellij-org/zellij/releases/download/v0.36.0/zellij-x86_64-unknown-linux-musl.tar.gz
-tar xzvf nvim-linux64.tar.gz
-tar xzvf zellij-x86_64-unknown-linux-musl.tar.gz
-mv zellij /usr/bin/
-rm zellij-x86_64-unknown-linux-musl.tar.gz
-# Zellij - Config
-mkdir -p ~/.config/zellij
-curl https://raw.githubusercontent.com/xRetry/arch-setup/main/roles/packages/files/config.kdl > ~/.config/zellij/config.kdl
+# Tmux
+apt-get install -y tmux
+# Tmux - Config
+mkdir -p ~/.config/tmux
+git clone https://github.com/xRetry/nvim.git ~/.config/nvim
 
 # Neovim
 curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
