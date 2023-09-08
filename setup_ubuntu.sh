@@ -31,7 +31,7 @@ echo "export TERM=screen-256color-bce" >> ~/.bashrc
 apt-get install -y tmux
 # Tmux - Config
 mkdir -p ~/.config/tmux
-git clone https://github.com/xRetry/nvim.git ~/.config/nvim
+git clone https://github.com/xRetry/tmux.git ~/.config/tmux
 
 # Neovim
 curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
