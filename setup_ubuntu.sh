@@ -17,6 +17,12 @@ setup_python() {
     nvim --headless +'TSInstall python' +'sleep 20' +qall
 }
 
+setup_js() {
+    apt-get install -y npm
+    curl -fsSL https://bun.sh/install | bash
+    nvim --headless +'TSInstall javascript' +'MasonInstall typescript-language-server' +'sleep 20' +qall
+}
+
 parse_lang() {
     case $1 in
         rust) setup_rust
@@ -24,6 +30,8 @@ parse_lang() {
         c) setup_c
             ;;
         python) setup_python
+            ;;
+        js) setup_js
             ;;
     esac
 }
