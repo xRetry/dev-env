@@ -3,25 +3,26 @@
 setup_rust() {
 	curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh -s -- -y
 	echo "export PATH=$user/.cargo/bin:$PATH" >> $user/.bashrc
-	export PATH=$user/.cargo/bin:$PATH
-	nvim --headless +'TSInstall rust' +'MasonInstall rust-analyzer' +'sleep 20' +qall
+	su $user -c "export PATH=$user/.cargo/bin:$PATH"
+	su $user -c "nvim --headless +'TSInstall rust' +'MasonInstall rust-analyzer' +'sleep 20' +qall"
 }
 
 setup_c() {
-    nvim --headless +'TSInstall c cpp' +'MasonInstall clangd' +'sleep 40' +qall
+    su $user -c "nvim --headless +'TSInstall c cpp' +'MasonInstall clangd' +'sleep 40' +qall"
 }
 
 setup_python() {
     apt-get install -y python3 python3-pip
     pip install pyright
-    nvim --headless +'TSInstall python' +'sleep 20' +qall
+    su $user -c "nvim --headless +'TSInstall python' +'sleep 20' +qall"
 }
 
 setup_js() {
     apt-get install -y npm
     curl -fsSL https://bun.sh/install | bash
-    nvim --headless +'TSInstall javascript' +'MasonInstall typescript-language-server' +'sleep 20' +qall
+    su $user -c "nvim --headless +'TSInstall javascript' +'MasonInstall typescript-language-server' +'sleep 20' +qall"
 }
+
 
 parse_lang() {
     case $1 in
@@ -37,7 +38,7 @@ parse_lang() {
 }
 
 setup_tools() {
-    home=$(awk -F: -v v="$1" '{if ($1==v) print $6}' /etc/passwd)
+    home=$(awk -F: -v v="$user" '{if ($1==v) print $6}' /etc/passwd)
 
     # Bash
     echo "set -o vi" >> $home/.bashrc
@@ -59,7 +60,8 @@ setup_tools() {
     # Neovim - Config
     mkdir -p $home/.config/nvim
     git clone https://github.com/xRetry/nvim.git $home/.config/nvim
-    nvim --headless +'Lazy sync' +'sleep 20' +qall
+    chown -R $user $home
+    su $user -c "nvim --headless +'Lazy sync' +'sleep 20' +qall"
 }
 
 apt-get update && apt-get install -y \
@@ -74,14 +76,16 @@ while getopts "t:l:" opt
 do
     case $opt in
         l) 
-	    parse_lang $OPTARG $user
+	    parse_lang $OPTARG
             ;;
         t) 
 	    user=$OPTARG
-            setup_tools $user
+            setup_tools
             ;;
     esac
 done
+
+chown -R $user $home
 
 exit 0
 
