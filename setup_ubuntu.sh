@@ -23,6 +23,17 @@ setup_js() {
     su $user -c "nvim --headless +'TSInstall javascript' +'MasonInstall typescript-language-server' +'sleep 20' +qall"
 }
 
+setup_zig() {
+    apt install xz-utils
+    curl -L https://ziglang.org/download/0.11.0/zig-linux-x86_64-0.11.0.tar.xz > zig.tar.xz
+    tar -xf zig.tar.xz
+    mkdir $home/.local/share/zig
+    mv zig-linux-x86_64-0.11.0/* $home/.local/share/zig/
+    rm zig.tar.xz zig-linux-x85_64-0.11.0
+    ln -s $home/.local/share/zig/zig /usr/local/bin/
+    su $user -c "nvim --headless +'TSInstall zig' +'MasonInstall zls' +'sleep 20' +qall"
+}
+
 
 parse_lang() {
     case $1 in
@@ -33,6 +44,8 @@ parse_lang() {
         python) setup_python
             ;;
         js) setup_js
+            ;;
+        zig) setup_zig
             ;;
     esac
 }
