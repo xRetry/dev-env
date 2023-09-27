@@ -29,7 +29,8 @@ setup_zig() {
     tar -xf zig.tar.xz
     mkdir $home/.local/share/zig
     mv zig-linux-x86_64-0.11.0/* $home/.local/share/zig/
-    rm zig.tar.xz zig-linux-x85_64-0.11.0
+    rm zig.tar.xz 
+    rm -r zig-linux-x85_64-0.11.0
     ln -s $home/.local/share/zig/zig /usr/local/bin/
     su $user -c "nvim --headless +'TSInstall zig' +'MasonInstall zls' +'sleep 20' +qall"
 }
