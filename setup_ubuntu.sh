@@ -51,33 +51,44 @@ parse_lang() {
     esac
 }
 
-setup_tools() {
-    home=$(awk -F: -v v="$user" '{if ($1==v) print $6}' /etc/passwd)
-
-    # Bash
-    echo "set -o vi" >> $home/.bashrc
-    echo "export TERM=screen-256color-bce" >> $home/.bashrc
-
-    # Tmux
+setup_tmux() {
     apt-get install -y tmux
-    # Tmux - Config
+    # Config
     mkdir -p $home/.config/tmux
     git clone https://github.com/xRetry/tmux.git $home/.config/tmux
+    echo "alias tmux='TERM=xterm-256color tmux'" >> $home/.bashrc
+}
 
-    # Neovim
+setup_nvim() {
     curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
     tar xzvf nvim-linux64.tar.gz
     mkdir -p $home/.local/share/nvim-linux64
     mv nvim-linux64 $home/.local/share/
     ln -s $home/.local/share/nvim-linux64/bin/nvim /usr/local/bin/nvim
     rm nvim-linux64.tar.gz
-    # Neovim - Config
+    # Config
     mkdir -p $home/.config/nvim
     git clone https://github.com/xRetry/nvim.git $home/.config/nvim
     chown -R $user $home
     su $user -c "nvim --headless +'Lazy sync' +'sleep 20' +qall"
 }
 
+setup_tools() {
+    echo "set -o vi" >> $home/.bashrc
+    echo "export TERM=screen-256color-bce" >> $home/.bashrc
+
+    setup_tmux
+    setup_nvim
+}
+
+# Check sudo rights
+sudo_check = $(sudo whoami)
+if [ $? -ne 0 ]; then
+    echo "Run with sudo rights!"
+    exit 1
+fi
+
+# General purpose packages
 apt-get update && apt-get install -y \
     curl \
     git \
@@ -85,6 +96,7 @@ apt-get update && apt-get install -y \
     unzip
 
 user=$(id -u -n)
+home=$(awk -F: -v v="$user" '{if ($1==v) print $6}' /etc/passwd)
 
 while getopts "t:l:" opt 
 do
@@ -99,6 +111,7 @@ do
     esac
 done
 
+# Fix owner of user directory
 chown -R $user $home
 
 exit 0
