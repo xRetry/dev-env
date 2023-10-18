@@ -15,7 +15,7 @@
             overlays = [ nvim_overlay ];
         };
     in rec {
-        devShell = pkgs.pkgs.mkShell {
+        devShell = pkgs.mkShell {
             buildInputs = with pkgs; [
                 neovim
             ];
