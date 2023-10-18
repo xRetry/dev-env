@@ -9,13 +9,14 @@
 
     outputs = { self, nixpkgs }:
     let
+        system = "x86_64-linux";
         nvim_overlay = import ./nvim.nix;
         pkgs = import nixpkgs {
-            system = "x86_64-linux";
+            inherit system;
             overlays = [ nvim_overlay ];
         };
     in rec {
-        devShell = pkgs.mkShell {
+        devShells.${system}.default = pkgs.mkShell {
             buildInputs = with pkgs; [
                 neovim
             ];
