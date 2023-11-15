@@ -2,24 +2,38 @@
     description = "Neovim flake with custom settings";
 
     inputs = {
-        nixpkgs.url = "github:NixOS/nixpkgs";
+        nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+        flake-utils.url = "github:numtide/flake-utils";
         nvim-config.url = "github:XRetry/nvim";
         tmux-config.url = "github:XRetry/tmux";
     };
 
-    outputs = { self, nixpkgs, nvim-config, tmux-config, ... }:
+    outputs = { self, nixpkgs, flake-utils, nvim-config, tmux-config, ... }:
+    flake-utils.lib.eachSystem ["x86_64-linux"] (system:
     let
-        system = "x86_64-linux";
         pkgs = import nixpkgs {
             inherit system;
-            overlays = [ nvim-config tmux-config ];
-        };
-    in rec {
-        devShells.${system}.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-                tmux
-                neovim
+            overlays = [ 
+                nvim-config.overlays.default 
+                tmux-config.overlays.default 
             ];
+        }; 
+    in {
+        devShells = {
+            default = pkgs.mkShell {
+                buildInputs = with pkgs; [
+                    tmux
+                    neovim
+                ];
+            };
+            cpp = pkgs.mkShell {
+                buildInputs = with pkgs; [
+                    tmux
+                    neovim
+                    gcc
+                    clang-tools
+                ];
+            };
         };
-    };
+    });
 }
