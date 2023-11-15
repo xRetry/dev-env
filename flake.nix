@@ -18,7 +18,7 @@
                 tmux-config.overlays.default 
             ];
         }; 
-    in {
+    in rec {
         devShells = {
             default = pkgs.mkShell {
                 buildInputs = with pkgs; [
@@ -35,5 +35,7 @@
                 ];
             };
         };
+
+        devShell = devShells.default;
     });
 }
